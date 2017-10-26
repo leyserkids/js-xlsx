@@ -1,3 +1,14 @@
+此版本为 合并了 xlsx-0.11.6 和 xlsx-style-0.8.13 的版本。只在 node 7.7.2 环境下测试过一部分功能。
+
+修改自 https://registry.npmjs.org/xlsx/-/xlsx-0.11.6.tgz 和 https://registry.npmjs.org/xlsx-style/-/xlsx-style-0.8.13.tgz. 
+
+合并了 xlsx-style 样式的部分到原始的 xlsx。
+
+因为需要 xlsx-0.11.6 的公式，有需要 xlsx-style-0.8.13 的样式。所以产生了这个版本。
+
+文档请看原始的版本。
+
+
 # [SheetJS js-xlsx](http://sheetjs.com)
 
 Parser and writer for various spreadsheet formats.  Pure-JS cleanroom
