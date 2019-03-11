@@ -45,6 +45,20 @@ function escapexml(text){
 	return s.replace(decregex, function(y) { return rencoding[y]; }).replace(charegex,function(s) { return "_x" + ("000"+s.charCodeAt(0).toString(16)).substr(-4) + "_";});
 }
 
+function escapexmltag(text){ return escapexml(text).replace(/ /g,"_x0020_"); }
+
+var htmlcharegex = /[\u0000-\u001f]/g;
+function escapehtml(text){
+	var s = text + '';
+	return s.replace(decregex, function(y) { return rencoding[y]; }).replace(/\n/g, "<br/>").replace(htmlcharegex,function(s) { return "&#x" + ("000"+s.charCodeAt(0).toString(16)).slice(-4) + ";"; });
+}
+
+function escapexlml(text){
+	var s = text + '';
+	return s.replace(decregex, function(y) { return rencoding[y]; }).replace(htmlcharegex,function(s) { return "&#x" + (s.charCodeAt(0).toString(16)).toUpperCase() + ";"; });
+}
+
+
 /* TODO: handle codepages */
 var xlml_fixstr = (function() {
 	var entregex = /&#(\d+);/g;
