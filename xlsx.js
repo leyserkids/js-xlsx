@@ -4260,23 +4260,25 @@ var parse_rs = (function parse_rs_factory() {
 })();
 
 /* 18.4.8 si CT_Rst */
-var sitregex = /<t[^>]*>([^<]*)<\/t>/g, sirregex = /<r>/;
+var sitregex = /<(?:\w+:)?t[^>]*>([^<]*)<\/(?:\w+:)?t>/g, sirregex = /<(?:\w+:)?r>/;
+var sirphregex = /<(?:\w+:)?rPh.*?>([\s\S]*?)<\/(?:\w+:)?rPh>/g;
 function parse_si(x, opts) {
 	var html = opts ? opts.cellHTML : true;
 	var z = {};
 	if(!x) return null;
-	var y;
+	//var y;
 	/* 18.4.12 t ST_Xstring (Plaintext String) */
-	if(x.charCodeAt(1) === 116) {
-		z.t = utf8read(unescapexml(x.substr(x.indexOf(">")+1).split(/<\/t>/)[0]));
-		z.r = x;
-		if(html) z.h = z.t;
+	// TODO: is whitespace actually valid here?
+	if(x.match(/^\s*<(?:\w+:)?t[^>]*>/)) {
+		z.t = unescapexml(utf8read(x.slice(x.indexOf(">")+1).split(/<\/(?:\w+:)?t>/)[0]||""));
+		z.r = utf8read(x);
+		if(html) z.h = escapehtml(z.t);
 	}
 	/* 18.4.4 r CT_RElt (Rich Text Run) */
-	else if((y = x.match(sirregex))) {
-		z.r = x;
-		z.t = utf8read(unescapexml(x.match(sitregex).join("").replace(tagregex,"")));
-		if(html) z.h = parse_rs(x);
+	else if((/*y = */x.match(sirregex))) {
+		z.r = utf8read(x);
+		z.t = unescapexml(utf8read((x.replace(sirphregex, '').match(sitregex)||[]).join("").replace(tagregex,"")));
+		if(html) z.h = parse_rs(z.r);
 	}
 	/* 18.4.3 phoneticPr CT_PhoneticPr (TODO: needed for Asian support) */
 	/* 18.4.6 rPh CT_PhoneticRun (TODO: needed for Asian support) */
